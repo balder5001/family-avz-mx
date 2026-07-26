@@ -1,4 +1,5 @@
 import { ProfileCard } from "@/components/Profile/ProfileCard";
+import { SignInButtons } from "@/components/Navigation/SignInButtons";
 import type { Person } from "@/types/person";
 
 const samplePeople: Person[] = [
@@ -27,6 +28,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-10 bg-zinc-50 px-6 py-16 font-sans dark:bg-black">
       <h1 className="text-2xl font-semibold">family.avz.mx</h1>
+      <SignInButtons />
       <div className="flex flex-wrap justify-center gap-6">
         {samplePeople.map((person) => (
           <ProfileCard key={person.id} person={person} />
