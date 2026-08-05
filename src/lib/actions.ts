@@ -17,6 +17,18 @@ export async function createSelfProfile(formData: FormData) {
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Not signed in");
 
+  // Guards against double form submissions creating two rows for one user;
+  // the people_user_id_unique index (migration 010) is the DB-level backstop.
+  const { data: existing } = await supabase
+    .from("people")
+    .select("id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (existing) {
+    revalidatePath("/dashboard");
+    return;
+  }
+
   const { error } = await supabase.from("people").insert({
     family_id: FAMILY_ID,
     user_id: user.id,

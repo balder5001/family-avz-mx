@@ -21,4 +21,12 @@ const { rows: rls } = await client.query(`
 `);
 console.log("RLS status:", rls);
 
+const { rows: people } = await client.query("select id, user_id, first_name, last_name from public.people");
+console.log("public.people:", people);
+
+const { rows: idx } = await client.query(
+  "select indexname from pg_indexes where tablename = 'people' and indexname = 'people_user_id_unique'",
+);
+console.log("unique index present:", idx.length > 0);
+
 await client.end();
