@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { TreeViewer } from "@/components/Tree/TreeViewer";
 import { ProfileCard } from "@/components/Profile/ProfileCard";
 import { AddRelativeForm } from "@/components/Profile/AddRelativeForm";
+import { ShareProfileButton } from "@/components/Profile/ShareProfileButton";
 import type { FamilyTreeNode } from "@/lib/tree";
 import type { Person } from "@/types/person";
 
@@ -27,6 +29,15 @@ export function TreeDashboard({
 
       <div className="flex w-full flex-col gap-4 lg:w-80">
         <ProfileCard person={selectedPerson} />
+
+        {!selectedPerson.userId && <ShareProfileButton personId={selectedPerson.id} />}
+
+        <Link
+          href={`/dashboard/person/${selectedPerson.id}`}
+          className="text-center text-sm text-neutral-500 hover:underline"
+        >
+          View full profile
+        </Link>
 
         <button
           onClick={() => setShowAddForm((v) => !v)}

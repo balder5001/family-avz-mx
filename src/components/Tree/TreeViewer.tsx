@@ -54,20 +54,20 @@ export function TreeViewer({
         >
           <circle
             r={20}
-            className={
-              isDeceased
-                ? "fill-neutral-400 stroke-amber-400"
-                : "fill-neutral-300 stroke-neutral-500 dark:fill-neutral-700"
-            }
+            fill="#a3a3a3"
+            stroke={isDeceased ? "#f59e0b" : "#737373"}
             strokeWidth={isDeceased ? 3 : 1.5}
             opacity={isDeceased ? 0.8 : 1}
           />
-          <text x={28} y={0} className="fill-neutral-900 text-[14px] font-medium dark:fill-neutral-100">
+          {/* Matches the --foreground variable body text already relies on
+              (globals.css), rather than a Tailwind dark: class — SVG fill
+              didn't pick up the dark: variant reliably. */}
+          <text x={28} y={0} style={{ fill: "var(--foreground)" }} className="text-[14px] font-medium">
             {nodeDatum.name}
             {spouseName ? ` & ${spouseName}` : ""}
           </text>
           {(birthYear || deathYear) && (
-            <text x={28} y={18} className="fill-neutral-500 text-[11px]">
+            <text x={28} y={18} fill="#a3a3a3" className="text-[11px]">
               {birthYear}
               {isDeceased ? ` – ${deathYear}` : ""}
             </text>

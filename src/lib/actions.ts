@@ -97,3 +97,58 @@ export async function addRelative(formData: FormData) {
   if (relError) throw relError;
   revalidatePath("/dashboard");
 }
+
+export async function claimPerson(formData: FormData) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Not signed in");
+
+  const personId = str(formData, "personId");
+  if (!personId) throw new Error("Missing person");
+
+  const { data: alreadyClaimed } = await supabase
+    .from("people")
+    .select("id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (alreadyClaimed) {
+    throw new Error("You already have a profile — you can't claim another one.");
+  }
+
+  // The people_user_id_unique index (migration 010) is the DB-level backstop
+  // for the same check; this also guards against claiming an already-linked person.
+  const { error } = await supabase
+    .from("people")
+    .update({ user_id: user.id })
+    .eq("id", personId)
+    .is("user_id", null);
+
+  if (error) throw error;
+  revalidatePath(`/dashboard/person/${personId}`);
+  revalidatePath("/dashboard");
+}
+
+export async function updateOwnProfile(formData: FormData) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Not signed in");
+
+  const { error } = await supabase
+    .from("people")
+    .update({
+      bio: str(formData, "bio"),
+      education: str(formData, "education"),
+      phone_number: str(formData, "phoneNumber"),
+      instagram_url: str(formData, "instagramUrl"),
+      facebook_url: str(formData, "facebookUrl"),
+      google_url: str(formData, "googleUrl"),
+    })
+    .eq("user_id", user.id);
+
+  if (error) throw error;
+  revalidatePath("/dashboard");
+}

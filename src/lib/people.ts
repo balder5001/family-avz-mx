@@ -64,3 +64,11 @@ export async function getPersonByUserId(userId: string): Promise<Person | null> 
   if (error) throw error;
   return data ? rowToPerson(data as PersonRow) : null;
 }
+
+export async function getPersonById(id: string): Promise<Person | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("people").select("*").eq("id", id).maybeSingle();
+
+  if (error) throw error;
+  return data ? rowToPerson(data as PersonRow) : null;
+}
