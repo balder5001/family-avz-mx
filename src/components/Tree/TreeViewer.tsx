@@ -9,8 +9,6 @@ import { fullName } from "@/types/person";
 
 const DEFAULT_NODE_COLOR = "#3B82F6";
 const DECEASED_GOLD = "#f59e0b";
-const LABEL_BG = "#171717"; // fixed dark chip behind every label, regardless of theme
-const LABEL_TEXT = "#f5f5f5"; // fixed light text on that chip — always readable
 
 function toRawNode(node: FamilyTreeNode): RawNodeDatum {
   return {
@@ -29,12 +27,6 @@ function toRawNode(node: FamilyTreeNode): RawNodeDatum {
 
 function yearOf(isoDate: string) {
   return isoDate ? isoDate.slice(0, 4) : "";
-}
-
-// Rough width estimate for a solid label background — SVG can't auto-size a
-// <rect> to sibling text, so this approximates it from character count.
-function estimateLabelWidth(text: string) {
-  return Math.max(40, text.length * 7 + 16);
 }
 
 export function TreeViewer({
@@ -62,7 +54,6 @@ export function TreeViewer({
 
       const label = `${nodeDatum.name}${spouseName ? ` & ${spouseName}` : ""}`;
       const subLabel = birthYear || deathYear ? `${birthYear}${isDeceased ? ` – ${deathYear}` : ""}` : "";
-      const chipWidth = Math.max(estimateLabelWidth(label), subLabel ? estimateLabelWidth(subLabel) : 0);
 
       return (
         <g
@@ -78,24 +69,31 @@ export function TreeViewer({
             opacity={isDeceased ? 0.85 : 1}
           />
 
-          {/* Fixed-color chip behind the label so it's readable regardless
-              of the page's light/dark theme or what's behind the tree. */}
-          <rect
-            x={28}
-            y={subLabel ? -12 : -10}
-            width={chipWidth}
-            height={subLabel ? 34 : 20}
-            rx={6}
-            fill={LABEL_BG}
-          />
-          <text x={28 + 8} y={subLabel ? 2 : 4} fill={LABEL_TEXT} className="text-[13px] font-medium">
-            {label}
-          </text>
-          {subLabel && (
-            <text x={28 + 8} y={18} fill={LABEL_TEXT} fillOpacity={0.7} className="text-[11px]">
-              {subLabel}
-            </text>
-          )}
+          {/* Real HTML via foreignObject instead of SVG <text> — SVG text
+              rendered blurry/low-contrast in Chrome regardless of color
+              (confirmed via computed styles), likely a sub-pixel/zoom-scale
+              rendering quirk. HTML text gets normal font rendering. */}
+          <foreignObject x={26} y={-16} width={220} height={44} style={{ overflow: "visible" }}>
+            <div
+              style={{
+                display: "inline-flex",
+                flexDirection: "column",
+                gap: 1,
+                background: "#171717",
+                color: "#f5f5f5",
+                borderRadius: 6,
+                padding: "4px 8px",
+                fontFamily: "Arial, Helvetica, sans-serif",
+                whiteSpace: "nowrap",
+                width: "fit-content",
+              }}
+            >
+              <span style={{ fontSize: 13, fontWeight: 500, lineHeight: 1.2 }}>{label}</span>
+              {subLabel && (
+                <span style={{ fontSize: 11, opacity: 0.7, lineHeight: 1.2 }}>{subLabel}</span>
+              )}
+            </div>
+          </foreignObject>
         </g>
       );
     },
