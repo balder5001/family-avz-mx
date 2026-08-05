@@ -1,0 +1,24 @@
+-- Mirrors auth.users into public.users on signup, keeping the same id so
+-- other tables (people.user_id, contributions, etc.) can FK straight to it.
+create or replace function public.handle_new_auth_user()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  insert into public.users (id, oauth_id, oauth_provider, email)
+  values (
+    new.id,
+    coalesce(new.raw_user_meta_data->>'sub', new.id::text),
+    coalesce(new.raw_app_meta_data->>'provider', 'unknown'),
+    new.email
+  )
+  on conflict (id) do nothing;
+  return new;
+end;
+$$;
+
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute function public.handle_new_auth_user();
