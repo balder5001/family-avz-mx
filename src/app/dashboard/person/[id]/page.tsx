@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getPersonById, getPersonByUserId } from "@/lib/people";
+import { OWNER_USER_ID } from "@/lib/family";
+import { fullName } from "@/types/person";
 import { ProfileCard } from "@/components/Profile/ProfileCard";
 import { ClaimButton } from "@/components/Profile/ClaimButton";
 import { EditProfileForm } from "@/components/Profile/EditProfileForm";
+import { RemoveButton } from "@/components/Profile/RemoveButton";
 
 export default async function PersonPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -44,6 +47,10 @@ export default async function PersonPage({ params }: { params: Promise<{ id: str
           You already have a profile, so you can&apos;t claim this one. Share this link with the
           person it belongs to instead.
         </p>
+      )}
+
+      {isUnclaimed && user.id === OWNER_USER_ID && (
+        <RemoveButton personId={person.id} personName={fullName(person)} />
       )}
 
       {!isOwnProfile && !isUnclaimed && (

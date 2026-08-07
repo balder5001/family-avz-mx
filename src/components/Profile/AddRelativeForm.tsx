@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useFormStatus } from "react-dom";
 import { addRelative } from "@/lib/actions";
 import { fullName } from "@/types/person";
 import type { Person } from "@/types/person";
@@ -9,6 +10,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" className="rounded-full" disabled={pending}>
+      {pending ? "Adding…" : "Add to tree"}
+    </Button>
+  );
+}
 
 export function AddRelativeForm({ people }: { people: Person[] }) {
   const [isDeceased, setIsDeceased] = useState(false);
@@ -73,9 +83,7 @@ export function AddRelativeForm({ people }: { people: Person[] }) {
         </Select>
       </div>
 
-      <Button type="submit" className="rounded-full">
-        Add to tree
-      </Button>
+      <SubmitButton />
     </form>
   );
 }

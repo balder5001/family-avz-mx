@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getFamilyPeople, getPersonByUserId } from "@/lib/people";
 import { getFamilyRelationships } from "@/lib/relationships";
 import { buildFamilyTree } from "@/lib/tree";
+import { OWNER_USER_ID } from "@/lib/family";
 import { CreateSelfForm } from "@/components/Profile/CreateSelfForm";
 import { TreeDashboard } from "@/components/Tree/TreeDashboard";
 
@@ -37,5 +38,12 @@ export default async function DashboardPage() {
     );
   }
 
-  return <TreeDashboard tree={tree} people={people} selfPerson={selfPerson} />;
+  return (
+    <TreeDashboard
+      tree={tree}
+      people={people}
+      selfPerson={selfPerson}
+      isOwner={user.id === OWNER_USER_ID}
+    />
+  );
 }

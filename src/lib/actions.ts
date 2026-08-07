@@ -1,9 +1,10 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { put } from "@vercel/blob";
 import { createClient } from "@/lib/supabase/server";
-import { FAMILY_ID } from "@/lib/family";
+import { FAMILY_ID, OWNER_USER_ID } from "@/lib/family";
 import type { RelationshipType } from "@/types/relationship";
 
 function str(formData: FormData, key: string): string | null {
@@ -97,6 +98,33 @@ export async function addRelative(formData: FormData) {
 
   if (relError) throw relError;
   revalidatePath("/dashboard");
+}
+
+export async function deletePerson(personId: string) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Not signed in");
+  if (user.id !== OWNER_USER_ID) throw new Error("Only the family admin can remove people");
+
+  // RLS also enforces this (delete policy only covers user_id IS NULL rows
+  // for the owner account), but checking here gives a clearer error than a
+  // silent no-op delete.
+  const { data, error } = await supabase
+    .from("people")
+    .delete()
+    .eq("id", personId)
+    .is("user_id", null)
+    .select("id");
+
+  if (error) throw error;
+  if (!data || data.length === 0) {
+    throw new Error("Can't remove a claimed profile");
+  }
+
+  revalidatePath("/dashboard");
+  redirect("/dashboard");
 }
 
 const MAX_PHOTO_BYTES = 4 * 1024 * 1024; // 4MB
