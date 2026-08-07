@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { put } from "@vercel/blob";
 import { createClient } from "@/lib/supabase/server";
 import { FAMILY_ID } from "@/lib/family";
 import type { RelationshipType } from "@/types/relationship";
@@ -95,6 +96,42 @@ export async function addRelative(formData: FormData) {
   ]);
 
   if (relError) throw relError;
+  revalidatePath("/dashboard");
+}
+
+const MAX_PHOTO_BYTES = 4 * 1024 * 1024; // 4MB
+const ALLOWED_PHOTO_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+
+export async function uploadProfilePhoto(formData: FormData) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Not signed in");
+
+  const file = formData.get("photo");
+  if (!(file instanceof File) || file.size === 0) {
+    throw new Error("No file selected");
+  }
+  if (!ALLOWED_PHOTO_TYPES.has(file.type)) {
+    throw new Error("Photo must be a JPEG, PNG, or WebP image");
+  }
+  if (file.size > MAX_PHOTO_BYTES) {
+    throw new Error("Photo must be under 4MB");
+  }
+
+  const extension = file.type.split("/")[1];
+  const blob = await put(`profile-photos/${user.id}.${extension}`, file, {
+    access: "public",
+    addRandomSuffix: true,
+  });
+
+  const { error } = await supabase
+    .from("people")
+    .update({ profile_photo_url: blob.url })
+    .eq("user_id", user.id);
+
+  if (error) throw error;
   revalidatePath("/dashboard");
 }
 

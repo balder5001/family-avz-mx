@@ -24,3 +24,12 @@ export interface Person {
 export function fullName(person: Pick<Person, "firstName" | "lastName">): string {
   return [person.firstName, person.lastName].filter(Boolean).join(" ");
 }
+
+export function initials(person: Pick<Person, "firstName" | "lastName">): string {
+  return fullName(person)
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}

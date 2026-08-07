@@ -2,18 +2,12 @@ import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { Person } from "@/types/person";
-import { fullName } from "@/types/person";
+import { fullName, initials } from "@/types/person";
 
 const DECEASED_GRAYSCALE = 0.2; // 20% desaturation for deceased profiles
 
 export function ProfileCard({ person }: { person: Person }) {
   const name = fullName(person);
-  const initials = name
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
 
   return (
     <Card
@@ -29,7 +23,7 @@ export function ProfileCard({ person }: { person: Person }) {
             <Image src={person.profilePhotoUrl} alt={name} fill sizes="80px" className="object-cover" />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-lg font-semibold text-muted-foreground">
-              {initials}
+              {initials(person)}
             </div>
           )}
         </div>

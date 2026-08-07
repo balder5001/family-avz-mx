@@ -2,15 +2,19 @@
 
 import { updateOwnProfile } from "@/lib/actions";
 import type { Person } from "@/types/person";
+import { initials } from "@/types/person";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { PhotoUpload } from "@/components/Profile/PhotoUpload";
 
 export function EditProfileForm({ person }: { person: Person }) {
   return (
     <form action={updateOwnProfile} className="flex w-full max-w-sm flex-col gap-4">
       <h2 className="text-lg font-semibold">Edit your info</h2>
+
+      <PhotoUpload currentPhotoUrl={person.profilePhotoUrl ?? null} initials={initials(person)} />
 
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="bio">Short bio</Label>
