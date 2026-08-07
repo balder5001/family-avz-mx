@@ -18,7 +18,7 @@ export default async function PersonPage({ params }: { params: Promise<{ id: str
   if (!person) {
     return (
       <div className="p-8">
-        <p className="text-neutral-500">Person not found.</p>
+        <p className="text-muted-foreground">Person not found.</p>
       </div>
     );
   }
@@ -29,7 +29,7 @@ export default async function PersonPage({ params }: { params: Promise<{ id: str
 
   return (
     <div className="flex min-h-screen flex-col items-center gap-6 p-8">
-      <Link href="/dashboard" className="self-start text-sm text-neutral-500 hover:underline">
+      <Link href="/dashboard" className="self-start text-sm text-muted-foreground hover:underline">
         ← Back to tree
       </Link>
 
@@ -40,14 +40,14 @@ export default async function PersonPage({ params }: { params: Promise<{ id: str
       {isUnclaimed && !viewerAlreadyHasProfile && <ClaimButton personId={person.id} />}
 
       {isUnclaimed && viewerAlreadyHasProfile && (
-        <p className="max-w-sm text-center text-sm text-neutral-500">
+        <p className="max-w-sm text-center text-sm text-muted-foreground">
           You already have a profile, so you can&apos;t claim this one. Share this link with the
           person it belongs to instead.
         </p>
       )}
 
       {!isOwnProfile && !isUnclaimed && (
-        <p className="text-sm text-neutral-500">This profile belongs to someone else.</p>
+        <p className="text-sm text-muted-foreground">This profile belongs to someone else.</p>
       )}
     </div>
   );

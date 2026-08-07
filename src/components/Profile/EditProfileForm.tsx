@@ -2,59 +2,44 @@
 
 import { updateOwnProfile } from "@/lib/actions";
 import type { Person } from "@/types/person";
-
-const inputClass =
-  "rounded-lg border border-neutral-300 bg-white px-3 py-2 text-neutral-900 placeholder:text-neutral-400 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:placeholder:text-neutral-500";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
 export function EditProfileForm({ person }: { person: Person }) {
   return (
-    <form action={updateOwnProfile} className="flex w-full max-w-sm flex-col gap-3">
+    <form action={updateOwnProfile} className="flex w-full max-w-sm flex-col gap-4">
       <h2 className="text-lg font-semibold">Edit your info</h2>
 
-      <textarea
-        name="bio"
-        placeholder="Short bio"
-        rows={3}
-        defaultValue={person.bio ?? ""}
-        className={inputClass}
-      />
-      <input
-        name="education"
-        placeholder="Education"
-        defaultValue={person.education ?? ""}
-        className={inputClass}
-      />
-      <input
-        name="phoneNumber"
-        placeholder="Phone number"
-        defaultValue={person.phoneNumber ?? ""}
-        className={inputClass}
-      />
-      <input
-        name="instagramUrl"
-        placeholder="Instagram URL"
-        defaultValue={person.instagramUrl ?? ""}
-        className={inputClass}
-      />
-      <input
-        name="facebookUrl"
-        placeholder="Facebook URL"
-        defaultValue={person.facebookUrl ?? ""}
-        className={inputClass}
-      />
-      <input
-        name="googleUrl"
-        placeholder="Google/website URL"
-        defaultValue={person.googleUrl ?? ""}
-        className={inputClass}
-      />
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="bio">Short bio</Label>
+        <Textarea id="bio" name="bio" rows={3} defaultValue={person.bio ?? ""} />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="education">Education</Label>
+        <Input id="education" name="education" defaultValue={person.education ?? ""} />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="phoneNumber">Phone number</Label>
+        <Input id="phoneNumber" name="phoneNumber" defaultValue={person.phoneNumber ?? ""} />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="instagramUrl">Instagram URL</Label>
+        <Input id="instagramUrl" name="instagramUrl" defaultValue={person.instagramUrl ?? ""} />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="facebookUrl">Facebook URL</Label>
+        <Input id="facebookUrl" name="facebookUrl" defaultValue={person.facebookUrl ?? ""} />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="googleUrl">Google/website URL</Label>
+        <Input id="googleUrl" name="googleUrl" defaultValue={person.googleUrl ?? ""} />
+      </div>
 
-      <button
-        type="submit"
-        className="rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background"
-      >
+      <Button type="submit" className="rounded-full">
         Save
-      </button>
+      </Button>
     </form>
   );
 }

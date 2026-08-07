@@ -32,7 +32,7 @@ export default async function DashboardPage() {
     // Shouldn't happen once selfPerson exists, but keeps rendering safe.
     return (
       <div className="p-8">
-        <p className="text-neutral-500">Couldn&apos;t build the tree yet.</p>
+        <p className="text-muted-foreground">Couldn&apos;t build the tree yet.</p>
       </div>
     );
   }

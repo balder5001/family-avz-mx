@@ -1,15 +1,13 @@
 import { claimPerson } from "@/lib/actions";
+import { Button } from "@/components/ui/button";
 
 export function ClaimButton({ personId }: { personId: string }) {
   return (
     <form action={claimPerson}>
       <input type="hidden" name="personId" value={personId} />
-      <button
-        type="submit"
-        className="rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background"
-      >
+      <Button type="submit" className="rounded-full">
         This is me — claim this profile
-      </button>
+      </Button>
     </form>
   );
 }

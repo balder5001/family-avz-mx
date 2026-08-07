@@ -69,28 +69,14 @@ export function TreeViewer({
             opacity={isDeceased ? 0.85 : 1}
           />
 
-          {/* Real HTML via foreignObject instead of SVG <text> — SVG text
-              rendered blurry/low-contrast in Chrome regardless of color
-              (confirmed via computed styles), likely a sub-pixel/zoom-scale
-              rendering quirk. HTML text gets normal font rendering. */}
+          {/* Real HTML via foreignObject — SVG <text> rendered blurry in
+              Chrome regardless of color. bg-card/text-card-foreground are
+              the same fixed-theme tokens every other card in the app uses. */}
           <foreignObject x={26} y={-16} width={220} height={44} style={{ overflow: "visible" }}>
-            <div
-              style={{
-                display: "inline-flex",
-                flexDirection: "column",
-                gap: 1,
-                background: "#171717",
-                color: "#f5f5f5",
-                borderRadius: 6,
-                padding: "4px 8px",
-                fontFamily: "Arial, Helvetica, sans-serif",
-                whiteSpace: "nowrap",
-                width: "fit-content",
-              }}
-            >
-              <span style={{ fontSize: 13, fontWeight: 500, lineHeight: 1.2 }}>{label}</span>
+            <div className="inline-flex w-fit flex-col gap-0.5 rounded-md border border-border bg-card px-2 py-1 whitespace-nowrap text-card-foreground">
+              <span className="text-[13px] font-medium leading-tight">{label}</span>
               {subLabel && (
-                <span style={{ fontSize: 11, opacity: 0.7, lineHeight: 1.2 }}>{subLabel}</span>
+                <span className="text-[11px] leading-tight text-muted-foreground">{subLabel}</span>
               )}
             </div>
           </foreignObject>

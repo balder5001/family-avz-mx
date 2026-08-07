@@ -1,4 +1,6 @@
 import Image from "next/image";
+import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import type { Person } from "@/types/person";
 import { fullName } from "@/types/person";
 
@@ -14,41 +16,35 @@ export function ProfileCard({ person }: { person: Person }) {
     .toUpperCase();
 
   return (
-    <div
-      className={[
-        "flex flex-col items-center gap-3 rounded-xl border p-4 text-center shadow-sm",
-        person.isDeceased
-          ? "border-amber-400 ring-2 ring-amber-400 ring-offset-2 ring-offset-background"
-          : "border-neutral-200 dark:border-neutral-800",
-      ].join(" ")}
+    <Card
+      className={cn(
+        "w-full max-w-xs text-center",
+        person.isDeceased && "border-amber-400 ring-2 ring-amber-400 ring-offset-2 ring-offset-background",
+      )}
       style={person.isDeceased ? { filter: `grayscale(${DECEASED_GRAYSCALE})` } : undefined}
     >
-      <div className="relative h-20 w-20 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-800">
-        {person.profilePhotoUrl ? (
-          <Image
-            src={person.profilePhotoUrl}
-            alt={name}
-            fill
-            sizes="80px"
-            className="object-cover"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center text-lg font-semibold text-neutral-500">
-            {initials}
-          </div>
-        )}
-      </div>
+      <CardContent className="flex flex-col items-center gap-3">
+        <div className="relative h-20 w-20 overflow-hidden rounded-full bg-muted">
+          {person.profilePhotoUrl ? (
+            <Image src={person.profilePhotoUrl} alt={name} fill sizes="80px" className="object-cover" />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-lg font-semibold text-muted-foreground">
+              {initials}
+            </div>
+          )}
+        </div>
 
-      <div>
-        <p className="font-medium">{name}</p>
-        {(person.birthDate || person.deathDate) && (
-          <p className="text-sm text-neutral-500">
-            {person.birthDate ?? "?"} – {person.isDeceased ? (person.deathDate ?? "?") : "present"}
-          </p>
-        )}
-      </div>
+        <div>
+          <p className="font-medium">{name}</p>
+          {(person.birthDate || person.deathDate) && (
+            <p className="text-sm text-muted-foreground">
+              {person.birthDate ?? "?"} – {person.isDeceased ? (person.deathDate ?? "?") : "present"}
+            </p>
+          )}
+        </div>
 
-      {person.bio && <p className="text-sm text-neutral-500">{person.bio}</p>}
-    </div>
+        {person.bio && <p className="text-sm text-muted-foreground">{person.bio}</p>}
+      </CardContent>
+    </Card>
   );
 }

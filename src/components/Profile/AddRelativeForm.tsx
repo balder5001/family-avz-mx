@@ -4,56 +4,78 @@ import { useState } from "react";
 import { addRelative } from "@/lib/actions";
 import { fullName } from "@/types/person";
 import type { Person } from "@/types/person";
-
-const inputClass =
-  "rounded-lg border border-neutral-300 bg-white px-3 py-2 text-neutral-900 placeholder:text-neutral-400 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:placeholder:text-neutral-500";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export function AddRelativeForm({ people }: { people: Person[] }) {
   const [isDeceased, setIsDeceased] = useState(false);
 
   return (
-    <form action={addRelative} className="flex w-full max-w-sm flex-col gap-3">
+    <form action={addRelative} className="flex w-full max-w-sm flex-col gap-4">
       <h2 className="text-lg font-semibold">Add a family member</h2>
 
-      <input name="firstName" placeholder="First name" required className={inputClass} />
-      <input name="lastName" placeholder="Last name" className={inputClass} />
-      <input name="birthDate" type="date" aria-label="Birth date" className={inputClass} />
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="relFirstName">First name</Label>
+        <Input id="relFirstName" name="firstName" required />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="relLastName">Last name</Label>
+        <Input id="relLastName" name="lastName" />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="relBirthDate">Birth date</Label>
+        <Input id="relBirthDate" name="birthDate" type="date" />
+      </div>
 
-      <label className="flex items-center gap-2 text-sm">
-        <input
-          type="checkbox"
+      <div className="flex items-center gap-2">
+        <Checkbox
+          id="isDeceased"
           name="isDeceased"
+          value="on"
           checked={isDeceased}
-          onChange={(e) => setIsDeceased(e.target.checked)}
+          onCheckedChange={(checked) => setIsDeceased(checked === true)}
         />
-        Deceased
-      </label>
+        <Label htmlFor="isDeceased">Deceased</Label>
+      </div>
       {isDeceased && (
-        <input name="deathDate" type="date" aria-label="Death date" className={inputClass} />
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="deathDate">Death date</Label>
+          <Input id="deathDate" name="deathDate" type="date" />
+        </div>
       )}
 
       <div className="flex gap-2">
-        <select name="relationshipType" required className={`flex-1 ${inputClass}`}>
-          <option value="child">is the child of</option>
-          <option value="parent">is the parent of</option>
-          <option value="sibling">is the sibling of</option>
-          <option value="spouse">is the spouse of</option>
-        </select>
-        <select name="relativeToId" required className={`flex-1 ${inputClass}`}>
-          {people.map((person) => (
-            <option key={person.id} value={person.id}>
-              {fullName(person)}
-            </option>
-          ))}
-        </select>
+        <Select name="relationshipType" required defaultValue="child">
+          <SelectTrigger className="flex-1">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="child">is the child of</SelectItem>
+            <SelectItem value="parent">is the parent of</SelectItem>
+            <SelectItem value="sibling">is the sibling of</SelectItem>
+            <SelectItem value="spouse">is the spouse of</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select name="relativeToId" required defaultValue={people[0]?.id}>
+          <SelectTrigger className="flex-1">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {people.map((person) => (
+              <SelectItem key={person.id} value={person.id}>
+                {fullName(person)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
-      <button
-        type="submit"
-        className="rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background"
-      >
+      <Button type="submit" className="rounded-full">
         Add to tree
-      </button>
+      </Button>
     </form>
   );
 }

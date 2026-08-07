@@ -26,8 +26,10 @@ const samplePeople: Person[] = [
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-10 bg-zinc-50 px-6 py-16 font-sans dark:bg-black">
-      <h1 className="text-2xl font-semibold">family.avz.mx</h1>
+    <div className="flex min-h-screen flex-col items-center justify-center gap-10 px-6 py-16">
+      <h1 className="font-[family-name:var(--font-pixel-square)] text-3xl tracking-tight">
+        family.avz.mx
+      </h1>
       <SignInButtons />
       <div className="flex flex-wrap justify-center gap-6">
         {samplePeople.map((person) => (

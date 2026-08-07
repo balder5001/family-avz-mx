@@ -6,6 +6,7 @@ import { TreeViewer } from "@/components/Tree/TreeViewer";
 import { ProfileCard } from "@/components/Profile/ProfileCard";
 import { AddRelativeForm } from "@/components/Profile/AddRelativeForm";
 import { ShareProfileButton } from "@/components/Profile/ShareProfileButton";
+import { Button } from "@/components/ui/button";
 import type { FamilyTreeNode } from "@/lib/tree";
 import type { Person } from "@/types/person";
 
@@ -23,7 +24,7 @@ export function TreeDashboard({
 
   return (
     <div className="flex flex-col gap-6 p-6 lg:flex-row">
-      <div className="flex-1 rounded-xl border border-neutral-200 dark:border-neutral-800">
+      <div className="flex-1 rounded-xl border border-border">
         <TreeViewer tree={tree} people={people} onSelectPerson={setSelectedPerson} />
       </div>
 
@@ -34,17 +35,14 @@ export function TreeDashboard({
 
         <Link
           href={`/dashboard/person/${selectedPerson.id}`}
-          className="text-center text-sm text-neutral-500 hover:underline"
+          className="text-center text-sm text-muted-foreground hover:underline"
         >
           View full profile
         </Link>
 
-        <button
-          onClick={() => setShowAddForm((v) => !v)}
-          className="rounded-full border border-neutral-300 px-5 py-2.5 text-sm font-medium hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-900"
-        >
+        <Button variant="outline" className="rounded-full" onClick={() => setShowAddForm((v) => !v)}>
           {showAddForm ? "Cancel" : "Add family member"}
-        </button>
+        </Button>
 
         {showAddForm && <AddRelativeForm people={people} />}
       </div>

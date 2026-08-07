@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export function ShareProfileButton({ personId }: { personId: string }) {
   const [copied, setCopied] = useState(false);
@@ -13,11 +14,8 @@ export function ShareProfileButton({ personId }: { personId: string }) {
   }
 
   return (
-    <button
-      onClick={share}
-      className="rounded-full border border-neutral-300 px-5 py-2.5 text-sm font-medium hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-900"
-    >
+    <Button variant="outline" className="rounded-full" onClick={share}>
       {copied ? "Link copied!" : "Share profile link"}
-    </button>
+    </Button>
   );
 }

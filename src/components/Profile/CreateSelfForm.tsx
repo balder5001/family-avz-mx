@@ -1,27 +1,39 @@
 "use client";
 
 import { createSelfProfile } from "@/lib/actions";
-
-const inputClass =
-  "rounded-lg border border-neutral-300 bg-white px-3 py-2 text-neutral-900 placeholder:text-neutral-400 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:placeholder:text-neutral-500";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
 export function CreateSelfForm() {
   return (
-    <form action={createSelfProfile} className="flex w-full max-w-sm flex-col gap-3">
-      <h1 className="text-xl font-semibold">Create your profile</h1>
-      <p className="text-sm text-neutral-500">
-        This becomes your spot in the family tree.
-      </p>
-      <input name="firstName" placeholder="First name" required className={inputClass} />
-      <input name="lastName" placeholder="Last name" className={inputClass} />
-      <input name="birthDate" type="date" className={inputClass} />
-      <textarea name="bio" placeholder="Short bio" rows={3} className={inputClass} />
-      <button
-        type="submit"
-        className="rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background"
-      >
+    <form action={createSelfProfile} className="flex w-full max-w-sm flex-col gap-4">
+      <div>
+        <h1 className="text-xl font-semibold">Create your profile</h1>
+        <p className="text-sm text-muted-foreground">This becomes your spot in the family tree.</p>
+      </div>
+
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="firstName">First name</Label>
+        <Input id="firstName" name="firstName" required />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="lastName">Last name</Label>
+        <Input id="lastName" name="lastName" />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="birthDate">Birth date</Label>
+        <Input id="birthDate" name="birthDate" type="date" />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="bio">Short bio</Label>
+        <Textarea id="bio" name="bio" rows={3} />
+      </div>
+
+      <Button type="submit" className="rounded-full">
         Create profile
-      </button>
+      </Button>
     </form>
   );
 }
